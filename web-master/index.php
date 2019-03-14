@@ -10,8 +10,9 @@
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
-<body>
 
+
+<body>
 	<nav class="navbar navbar-inverse navbar-fixed-top" >
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -28,6 +29,7 @@
 					<li><a class="active" href="http://localhost/web-master/demo1.php">Home</a></li>
 					<li><a href="#">Topics</a></li>
 					<li><a href="http://localhost/web-master/lythuyet1.php">Grammar</a></li>
+					<li><a href="http://localhost/web-master/index.php">Translate</a></li>
 					<li><a href="#">Test</a></li>
 					<li><a href="#">About</a></li>
 				</ul>
@@ -35,83 +37,55 @@
 		</div>
 	</nav>
 
-	<div id="home">
-		<div class="landing-text">
-			<h1>UDict</h1>
-			<h3>This is your dictionary</h3>
-			<form class="form-inline" action="demo1.php" method="post">
-				
-	      			<input type="text" name='key' placeholder="Type to search..." >
-	      	
-	        		<input type="submit" value="Search">
-	        	</div>
-	        	</div>
-	    	</form>
-	</div>
 
 
-	<div class="content">
+
+
+	<div class="content" style= "background: #A8B5BE;">
 		<div class="row">
-			<div class="col-sm-2"></div>
+			<div class="col-sm-5 " id="explain" style=" margin-top: 60px; margin-left:10px; ">
+				<form method="POST">
+					<h3>
+				<textarea name ="dulieu" style="min-width: 550px; min-height: 200px; "><?php if (isset($_POST['submit'])) {
+					echo $_POST['dulieu'];
+				} ?></textarea>	
+				<input type="submit" name="submit" value="Dịch">
+			</h3>
+			</form>
+			</div>
 
-			
-  			<div class="col-sm-8" id="explain" style="margin-bottom: 50px;">
-  				<h3>Search Results for: </h3>
-  				<h2>
-  					<?php 
-  					if(isset($_POST['key']))
-					echo $_POST['key'];
-  				?>
-  				</h2>
-  				<hr style="border-top:1px solid black;">
-  				<div>
-  				<?php
-				   $db = new PDO("sqlite:dictionaries.db");
-				   if(!$db){
-				      echo $db->lastErrorMsg();
-				   } else {
-				     // echo "Opened database successfully \n\n";
-				   }
+  			<div class="col-sm-6" id="explain" style=" margin-top: 60px; margin-bottom: 0px; margin-left: 10px; margin-right: 10px">
+  				<hr style="border-top:1px solid black;">	
 
-				   if(isset($_POST['key'])){
-					    if(strcasecmp( $_POST['key'], '' ) == 0){
-					   echo "Sorry, we didn't find any word that match your search.";
-						}
-				   else
-				   {
-				   	$s= $_POST["key"] ;
-				   $sql = "SELECT * from tbl_edict where word like " . "'" . $s ."%';";
-				 
-				   $ret = $db->query($sql);
-				   
-				   while($row = $ret->fetch(\PDO::FETCH_ASSOC) ){
-				    
-				      echo "Explain  ". $row['detail'] ."\n";
-				   }
-				   
-				   }
+				<?php
+				$text1="";
+				if (isset($_POST['submit'])) {
+					$text1=$_POST['dulieu'];
+					# code...
 				}
-				
-				?>
+            		require_once ('vendor/autoload.php');
+            		use \Statickidz\GoogleTranslate;
 
-					</div>
+            		$source = 'en';
+            		$target = 'vi';
+            		$text = $text1;
+
+            		$trans = new GoogleTranslate();
+            		$result = $trans->translate($source, $target, $text);
+
+            		echo '<h2>'.$result.'</h2>';
+        		?>
   			</div>
 
-
-  			<div class="col-sm-2"></div>
 		</div>
 	</div>
 
 
 
+        
 
 
-
-
-
-
-
-	<footer class="container-fluid text-center">
+    <footer class="container-fluid text-center">
 		<div class="row">
 			<div class="col-sm-4">
 				<h3>Contact us</h3>
@@ -129,8 +103,5 @@
 				<img src="imgg/logo.png" class="icon">
 			</div>
 	</footer>
-
-
-
-</body>
-</html>
+    </body>
+</htmL>

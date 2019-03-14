@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,21 +10,8 @@
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
-
-
 <body>
-	
-	<?php
-        $muc=array(
-        	1 => 'Hiện tại đơn',
-        	2 => 'Hiện tại tiếp diễn',
-        	3 => 'Hiện tại hoàn thành',
-        	4 => 'Hiện tại hoàn thành tiếp diễn',
-        	5 => 'Quá khứ đơn',
-        	6 => 'Quá khứ tiếp diễn',
-        	7 => 'Quá khứ hoàn thành'
-        );
-    ?>
+
 	<nav class="navbar navbar-inverse navbar-fixed-top" >
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -42,6 +28,7 @@
 					<li><a class="active" href="http://localhost/web-master/demo1.php">Home</a></li>
 					<li><a href="#">Topics</a></li>
 					<li><a href="http://localhost/web-master/lythuyet1.php">Grammar</a></li>
+					<li><a href="http://localhost/web-master/index.php">Translate</a></li>
 					<li><a href="#">Test</a></li>
 					<li><a href="#">About</a></li>
 				</ul>
@@ -49,57 +36,80 @@
 		</div>
 	</nav>
 
-	<div class="content" style= "background: #A8B5BE;">
+	<div id="home">
+		<div class="landing-text">
+			<h1>UDict</h1>
+			<h3>This is your dictionary</h3>
+			<form class="form-inline" action="demo1.php" method="post">
+				
+	      			<input type="text" name='key' placeholder="Type to search..." >
+	      	
+	        		<input type="submit" value="Search">
+	        	</div>
+	        	</div>
+	    	</form>
+	</div>
+
+
+	<div class="content">
 		<div class="row">
-				<div class="col-sm-2 " id ="phan1" style=" margin-top: 80px; margin-left: 10px; ">
-				<form method="POST">			
-        			<select name="mucc">
-            			<option>Chọn mục</option>
-            			<?php
-                			foreach($muc as $k=>$v){
-                		?>
-                		<option value=" <?php echo $k;?> "><?php echo $v;?></option>
-                		<?php
-                		}
-            			?>
-        			</select>
-        		
-        			<div><input type="submit" name ="submit" value="Search" ></div>  
-        			</form>      		
-				</div>
+			<div class="col-sm-2"></div>
+
 			
-
-
-  			<div class="col-sm-9" id="explain" style=" margin-top: 50px; margin-bottom: 0px; margin-left: 10px; margin-right: 10px">
+  			<div class="col-sm-8" id="explain" style="margin-bottom: 50px;">
+  				<h3>Search Results for: </h3>
+  				<h2>
+  					<?php 
+  					if(isset($_POST['key']))
+					echo $_POST['key'];
+  				?>
+  				</h2>
   				<hr style="border-top:1px solid black;">
-  					<?php
-						$servername = "localhost";
-						$username = "root";
-						$password = "";
-						$dbname = "lythuyet";
-						// Create connection
-						$dbc = new mysqli($servername, $username, $password, $dbname);
-						// Check connection
-						if ($dbc->connect_error) {
-    						die("Connection failed: " . $dbc->connect_error);
-						} 
-					?>
-					<?php
-						mysqli_set_charset($dbc, 'UTF8'); 	
-						// Câu query lấy dữ liệu
-						 if(isset($_POST['submit'])){
-						 	$query = "select lythuyet from congthuc where TT= " .$_POST['mucc'] ;
-  						 	$ret = $dbc->query($query);
-   							while($row = $ret->fetch_assoc() ){
- 							 echo  $row['lythuyet'] ;
-   							}
-        				}
-						
-					?> 		
-							
+  				<div>
+  				<?php
+				   $db = new PDO("sqlite:dictionaries.db");
+				   if(!$db){
+				      echo $db->lastErrorMsg();
+				   } else {
+				     // echo "Opened database successfully \n\n";
+				   }
+
+				   if(isset($_POST['key'])){
+					    if(strcasecmp( $_POST['key'], '' ) == 0){
+					   echo "Sorry, we didn't find any word that match your search.";
+						}
+				   else
+				   {
+				   	$s= $_POST["key"] ;
+				   $sql = "SELECT * from tbl_edict where word like " . "'" . $s ."%';";
+				 
+				   $ret = $db->query($sql);
+				   
+				   while($row = $ret->fetch(\PDO::FETCH_ASSOC) ){
+				    
+				      echo "Explain  ". $row['detail'] ."\n";
+				   }
+				   
+				   }
+				}
+				
+				?>
+
+					</div>
   			</div>
+
+
+  			<div class="col-sm-2"></div>
 		</div>
 	</div>
+
+
+
+
+
+
+
+
 
 
 	<footer class="container-fluid text-center">
