@@ -57,9 +57,12 @@
 
 	<div class="content" style= "background: #A8B5BE;">
 		<div class="row">
-				<div class="col-sm-2 " id ="phan1" style=" margin-top: 80px; margin-left: 10px; ">
+				<div class="col-sm-3 " id ="phan1" style=" margin-top: 80px; margin-left: 10px; ">
 				<form method="POST">			
-        			<select  name="mucc">
+        			<select  name="mucc" style="    border-radius: 10px;
+    height: 40px;
+    font-size: 20px;
+    box-shadow: 0 0 0 5px #1d1a1d;">
             			<option>Chọn mục</option>
             			<?php
                 			foreach($muc as $k=>$v){
@@ -76,7 +79,7 @@
 			
 
 
-  			<div class="col-sm-9" id="explain" style=" margin-top: 50px; margin-bottom: 0px; margin-left: 10px; margin-right: 10px">
+  			<div class="col-sm-8" id="explain" style=" margin-top: 50px; margin-bottom: 0px; margin-left: 10px; margin-right: 10px">
   				<hr style="border-top:1px solid black;">
   					<?php
 						$servername = "localhost";
